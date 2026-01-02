@@ -1,4 +1,5 @@
 //This sample uses the Plot library rather than d3 directly
+//Components with the plot library
 import * as Plot from '@observablehq/plot'
 import * as d3 from 'd3'
 
@@ -46,23 +47,6 @@ console.log(columns)
 
     return(
         <>
-        <p>{columns.length} columns present in your uploaded file</p>
-        <select >
-        {columns.map((column)=> <option value={column} className='capitalize' key={column}>{column}</option>)}
-        </select>
-        
-        <form>
-            <label htmlFor='file'>
-            <input type="file" name="file" id="file" accept='.csv, .xls, .xlsx' onChange={async(e) => {
-             if(e.target.files){
-                const value = await e.target.files[0].text()
-                const d3_parsed = d3.csvParse(value)
-                updateColumns(d3_parsed.columns)
-                console.log(d3_parsed)
-            }
-             }} />
-            </label>
-        </form>
         <div ref={contRef} />
         </>
     )

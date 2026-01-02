@@ -1,6 +1,8 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 
+//scatter plot with the d3 library 
+
 export default function TestPlot() {
   const [data] = useState(
     [
