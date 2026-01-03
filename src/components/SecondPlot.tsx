@@ -1,31 +1,21 @@
 //This sample uses the Plot library rather than d3 directly
 //Components with the plot library
 import * as Plot from '@observablehq/plot'
-import * as d3 from 'd3'
+//import * as d3 from 'd3'
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
-
-export default function PlottedWithPlot(){
+export default function PlottedWithPlot(
+props : {
+    chartType: string, 
+    chartData: any[],  
+    xCol: string,
+    yCol: string
+}
+){
+    const {chartData, chartType, xCol, yCol} = props
     const contRef = useRef<any>(null);
-    const [columns, updateColumns] = useState<any[]>([])
     const booleanTestVar  = true
-    const aapl = [
-  {Date: new Date("2013-05-13"), Open: 64.501427, High: 65.414284, Low: 64.500000, Close: 64.962860, Volume: 79237200},
-  {Date: new Date("2013-05-14"), Open: 64.835716, High: 65.028572, Low: 63.164288, Close: 63.408573, Volume: 111779500},
-  {Date: new Date("2013-05-15"), Open: 62.737144, High: 63.000000, Low: 60.337143, Close: 61.264286, Volume: 185403400},
-  {Date: new Date("2013-05-16"), Open: 60.462856, High: 62.549999, Low: 59.842857, Close: 62.082859, Volume: 150801000},
-  {Date: new Date("2013-05-17"), Open: 62.721428, High: 62.869999, Low: 61.572857, Close: 61.894287, Volume: 106976100}
-]
-
-
-useEffect(()=> {
-console.log(columns)
-}, [columns])
-
-
-
-
 
     useEffect(() => {
         const plot = Plot.plot({
@@ -37,13 +27,13 @@ console.log(columns)
             ,
             marks: [
                 booleanTestVar ? Plot.frame() : null,
-                Plot.dot(aapl, {x: "Date", y: "Close", stroke: "blue"}),
-                Plot.lineY(aapl, {x: "Date", y: "Close", stroke: 'red'}),
+                Plot.dot(chartData, {x: xCol, y: yCol, stroke: "blue"}),
+                Plot.lineY(chartData, {x: xCol, y: yCol, stroke: 'red'}),
             ]
         })
         contRef?.current?.append(plot)
         return () => plot.remove();
-    }, [])
+    }, [chartData, chartType])
 
     return(
         <>

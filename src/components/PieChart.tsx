@@ -50,7 +50,7 @@ useEffect(() => {
     .enter()
     .append("path")
     .attr("d", arc).on("mouseover", (event ,d) => {
-        console.log(event.target)
+        //console.log(event.target)
     tooltip
       .style("opacity", 1)
       .html(`
