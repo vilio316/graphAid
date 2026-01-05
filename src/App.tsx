@@ -17,11 +17,13 @@ function App() {
   const changeHandler = async (e: any) => {
     const file = await e.target.files[0].text();
     const parsed_values = await d3.csvParse(file);
+    //console.log(parsed_values)
     addFileDetails(parsed_values);
     updateChartCols({ xCol: "", yCol: "" });
     updateColumns(parsed_values.columns);
     changeFile(true);
   };
+
 
   function PlottedWithPlot(props: {
     chartType: string;
@@ -148,7 +150,6 @@ function App() {
                   className="border-2 border-blue-500 m-2 p-1 rounded-xl"
                   onChange={(e) => {
                     updateChartType(e.target.value);
-                    console.log(e.target.value)
                   }}
                 >
                   <option value={"lineX"}>Line Chart</option>
