@@ -1,15 +1,26 @@
 import * as d3 from "d3";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export default function PieChart() {
   const svgRef = useRef(null);
+ 
+  const savings = [
+    {
+        label: 'String Beans', value: 234990
+    } , 
+    {
+        label: "Mozarella", value: 456888
+    }
+
+  ]
+  
   const arrCat = [
     { name: "Nasse" },
     {
-      name: "Flask",
+      name: "Flash",
     },
-    { name: "Flask" },
+    { name: "Flash" },
     { name: "Sheila" },
     {
       name: "Reginald",
@@ -34,27 +45,8 @@ export default function PieChart() {
     },
   ];
 
-  const arraySort = () => {
-    for (let i = 0; i < arrCat.length -1 ; i++) {
-      if(arrCat[i].name == arrCat[i + 1].name  ){
-        console.log("Repeated Element, " , arrCat[i].name)
-      }
-      else{
-        console.log("New Element: ", arrCat[i].name)
-      }
-    
-    }
-  };
 
   useEffect(() => {
-    const data = [
-      { label: "A", value: 30 },
-      { label: "B", value: 50 },
-      { label: "C", value: 20 },
-      { label: "D", value: 30 },
-    ];
-
-    arraySort();
     const pie_colors = ["red", "yellow", "blue", "green", "orange", "pink"];
 
     const tooltip = d3
@@ -88,7 +80,7 @@ export default function PieChart() {
     const arc = d3.arc<any>().innerRadius(0).outerRadius(radius);
 
     g.selectAll("path")
-      .data(pie(data))
+      .data(pie(savings))
       .enter()
       .append("path")
       .attr("d", arc)

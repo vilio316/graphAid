@@ -12,12 +12,13 @@ function App() {
     yCol: "",
   });
   const [fileState, addFileDetails] = useState<any[]>();
-  const [selectedChartType, updateChartType] = useState("");
+  const [selectedChartType, updateChartType] = useState("lineX");
+  const [hasArea, addArea] = useState(false)
 
   const changeHandler = async (e: any) => {
     const file = await e.target.files[0].text();
     const parsed_values = await d3.csvParse(file);
-    //console.log(parsed_values)
+    console.log(parsed_values)
     addFileDetails(parsed_values);
     updateChartCols({ xCol: "", yCol: "" });
     updateColumns(parsed_values.columns);
@@ -31,7 +32,7 @@ function App() {
     xCol: string;
     yCol: string;
   }) {
-    //lineX, lineY, barX, barY, pie, dot,
+    //lineX, lineY, barX, barY, pie, dot, lineXShaded
     const { chartData, chartType, xCol, yCol } = props;
     const contRef = useRef<any>(null);
 
@@ -65,7 +66,7 @@ function App() {
             ? Plot.lineX(chartData, {
                 x: xCol,
                 y: yCol,
-                stroke: "blue",
+                stroke: `${hasArea ? 'black' : 'blue'}`,
               })
             : null,
           chartType == "barX"
@@ -89,6 +90,11 @@ function App() {
                 className: "fill-blue-400",
               })
             : null,
+            hasArea ? 
+            Plot.areaY(chartData, {
+              x: xCol, y: yCol, className: 'fill-blue-400 opacity-70'
+            })
+            : null
         ],
       });
     };
@@ -121,7 +127,7 @@ function App() {
         </div>
 
         <div className="w-full grid grid-cols-4 gap-x-4 items-start p-4 border-2 border-gray-500 rounded-4xl">
-          <div className={`${fileState ? `col-span-1`: `col-span-2`} p-4`}>
+          <div className={`col-span-1 p-4`}>
             <p className="font-bold text-2xl">Data Entry</p>
             <p>Please upload your CSV file here</p>
             <label
@@ -158,6 +164,10 @@ function App() {
                   <option value={"pie"}>Pie Chart</option>
                   <option value={"dot"}>Scatter Plot</option>
                 </select>
+
+                <button onClick={()=> addArea(!hasArea)} className={`${selectedChartType == 'lineX' ? 'block': 'hidden' }`}>
+                  Toggle Area {String(hasArea)}
+                </button>
               </div>
               <p>
                 Y-axis:
@@ -200,6 +210,7 @@ function App() {
             </div>
           </div>
           <div className="grid col-span-3">
+            <>
             {fileState &&
             selectedChartType.length > 0 &&
             chartCols.yCol.length > 0 ? (
@@ -214,6 +225,7 @@ function App() {
                 yCol={chartCols.yCol}
               />
             ) : null}
+          </>
           </div>
         </div>
       </div>
