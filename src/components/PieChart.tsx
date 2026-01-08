@@ -1,54 +1,31 @@
 import * as d3 from "d3";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
-export default function PieChart() {
+export default function PieChart(props: { data: any[]; col: string }) {
+  console.log(props.col);
   const svgRef = useRef(null);
- 
-  const savings = [
-    {
-        label: 'String Beans', value: 234990
-    } , 
-    {
-        label: "Mozarella", value: 456888
+
+  function countByProp<T extends Record<string, unknown>, K extends keyof T>(
+    arr: T[],
+    key: K
+  ): Array<{ [P in K]: T[P] } & { value: number }> {
+    const map = new Map<T[K], number>();
+
+    for (const item of arr) {
+      const propValue = item[key];
+      map.set(propValue, (map.get(propValue) ?? 0) + 1);
     }
 
-  ]
-  
-  const arrCat = [
-    { name: "Nasse" },
-    {
-      name: "Flash",
-    },
-    { name: "Flash" },
-    { name: "Sheila" },
-    {
-      name: "Reginald",
-    },
-    {
-      name: "Reginald",
-    },
-    {
-      name: "Reginald",
-    },
-    {
-      name: "Reginald",
-    },
-    {
-      name: "Reginald",
-    },
-    {
-      name: "Reginald",
-    },
-    {
-      name: "Daniel",
-    },
-  ];
-
+    return Array.from(map.entries()).map(([propValue, value]) => ({
+      [key]: propValue,
+      value,
+    })) as Array<{ [P in K]: T[P] } & { value: number }>;
+  }
 
   useEffect(() => {
     const pie_colors = ["red", "yellow", "blue", "green", "orange", "pink"];
-
+    const usable = countByProp(props.data, props.col);
     const tooltip = d3
       .select("body")
       .append("div")
@@ -80,14 +57,14 @@ export default function PieChart() {
     const arc = d3.arc<any>().innerRadius(0).outerRadius(radius);
 
     g.selectAll("path")
-      .data(pie(savings))
+      .data(pie(usable))
       .enter()
       .append("path")
       .attr("d", arc)
       .on("mouseover", (event, d) => {
         //console.log(event.target);
         tooltip.style("opacity", 1).html(`
-        <strong>${d.data.label}</strong><br/>
+        <strong>${d.data[props.col]}</strong><br/>
         Value: ${d.data.value}
       `);
       })

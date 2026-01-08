@@ -18,7 +18,6 @@ function App() {
   const changeHandler = async (e: any) => {
     const file = await e.target.files[0].text();
     const parsed_values = await d3.csvParse(file);
-    console.log(parsed_values)
     addFileDetails(parsed_values);
     updateChartCols({ xCol: "", yCol: "" });
     updateColumns(parsed_values.columns);
@@ -109,7 +108,7 @@ function App() {
       <>
         {chartType !== 'pie' ? <div ref={contRef} /> : 
         <div className="grid justify-center">
-        <PieChart />
+        {fileState ? <PieChart data={fileState} col={yCol} /> : <p>Can't find fileState</p>}
         </div>
   }
       </>
