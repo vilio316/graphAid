@@ -3,7 +3,6 @@ import * as d3 from "d3";
 import { useRef, useEffect } from "react";
 
 export default function PieChart(props: { data: any[]; col: string }) {
-  console.log(props.col);
   const svgRef = useRef(null);
 
   function countByProp<T extends Record<string, unknown>, K extends keyof T>(
@@ -24,7 +23,7 @@ export default function PieChart(props: { data: any[]; col: string }) {
   }
 
   useEffect(() => {
-    const pie_colors = ["red", "yellow", "blue", "green", "orange", "pink"];
+    const pie_colors = ["red", "yellow", "blue", "green", "orange", "pink", 'indigo', 'violet', 'lemon', 'gray', 'fuschia', 'peach'];
     const usable = countByProp(props.data, props.col);
     const tooltip = d3
       .select("body")
@@ -82,6 +81,7 @@ export default function PieChart(props: { data: any[]; col: string }) {
   return (
     <>
       <svg ref={svgRef} />
+      <p>Pie Chart showing <span className="capitalize">{props.col}</span> stats from your file</p>
     </>
   );
 }
