@@ -3,6 +3,9 @@ import * as d3 from "d3";
 import * as Plot from "@observablehq/plot";
 //import PlottedWithPlot from "./components/SecondPlot";
 import PieChart from "./components/PieChart";
+import { FaChartBar, FaChartLine, FaChartPie } from "react-icons/fa6";
+import { FaRegChartBar } from "react-icons/fa";
+import { LuChartScatter } from "react-icons/lu";
 
 function App() {
   const [columns, updateColumns] = useState<any[]>([]);
@@ -131,14 +134,14 @@ function App() {
     <>
       <div className="homepage p-4 mx-auto">
         <div className="header my-2">
-          <p className="text-xl font-bold">GraphAid</p>
-          <p>
+          <p className="text-3xl font-bold">GraphAid</p>
+          <p className="text-lg my-2">
             Generating beautiful graphs is <i>probably</i> easier than this lol
           </p>
         </div>
 
-        <div className="w-full grid grid-cols-5 gap-x-4 items-start p-4 border-2 border-gray-500 rounded-4xl">
-          <div className={`col-span-2 p-4`}>
+        <div className="w-full grid md:grid-cols-5 gap-x-4 items-start p-4 border-2 border-gray-500 rounded-4xl">
+          <div className={`md:col-span-2 p-4`}>
             <p className="font-bold text-2xl">Data Entry</p>
             <p>Please upload your CSV file here</p>
             <label
@@ -160,31 +163,52 @@ function App() {
               />
             </label>
             <div className={`${fileLoadState ? "block" : "hidden"} `}>
-              <p>
+              <p className="my-2">
                 {columns.length} columns present in your uploaded file (
                 {fileName}){" "}
               </p>
-              <div className="flex items-center">
-                <label>Chart Type: </label>
-                <select
-                  className="border-2 border-blue-500 m-2 p-1 rounded-xl"
-                  onChange={(e) => {
-                    updateChartType(e.target.value);
-                  }}
-                >
-                  <option value={"lineX"}>Line Chart</option>
-                  <option value={"barX"}>Horizontal Bar Chart</option>
-                  <option value={"barY"}>Vertical Bar Chart</option>
-                  <option value={"pie"}>Pie Chart</option>
-                  <option value={"dot"}>Scatter Plot</option>
-                </select>
-
+              <div className="w-full">
+                <div className="flex gap-x-4 w-4/5 items-center">
+                <p className="underline font-bold ">Chart Type </p>  
                 <button
                   onClick={() => addArea(!hasArea)}
-                  className={`${selectedChartType == "lineX" ? "" : "hidden"} bg-blue-400 p-2 text-white rounded-xl `}
+                  className={`${selectedChartType == "lineX" ? "" : "hidden"} justify-self-end bg-blue-400 p-1 text-white rounded-xl `}
                 >
-                  Toggle Area
+                {hasArea ? "Hide Area" : 'Show Area'}
                 </button>
+                </div>
+                <div className="flex p-1 gap-x-1 my-1">
+                  <div className={`flex gap-x-2 items-center rounded-3xl p-2 ${selectedChartType == "lineX"? 'bg-blue-400 text-white':`bg-gray-200 text-gray-600`}`} onClick={() => updateChartType('lineX')}>
+                    <FaChartLine className="inline text-2xl" />
+                    <span>Line Chart</span>
+                  </div>
+
+                   <div className={`flex gap-x-2 items-center rounded-3xl p-2 ${selectedChartType == "barX"? 'bg-blue-400 text-white':`bg-gray-200 text-gray-600`}`} onClick={() => updateChartType('barX')}>
+                    <FaChartBar className="inline text-2xl" />
+                    <span>Bar Chart (Horizontal) </span>
+                  </div>
+
+                   <div className={`flex gap-x-2 items-center rounded-3xl p-2 ${selectedChartType == "barY"? 'bg-blue-400 text-white':`bg-gray-200 text-gray-600`} `} onClick={() => updateChartType('barY')}>
+                    <FaRegChartBar className="inline text-2xl" />
+                    <span>Bar Chart (Vertical)</span>
+                  </div>
+
+                  
+
+                  </div>
+                  <div className="flex p-1 gap-x-1 my-1">
+                   <div className={`flex gap-x-2 items-center ${selectedChartType == "pie"? 'bg-blue-400 text-white':`bg-gray-200 text-gray-600`} rounded-3xl p-2 transition-colors`} onClick={() => updateChartType('pie')}>
+                    <FaChartPie className="inline text-2xl" />
+                    <span>Pie Chart</span>
+                  </div>
+
+                   <div className={`flex gap-x-2 items-center ${selectedChartType == 'dot'? 'bg-blue-400 text-white' :'bg-gray-200 text-gray-600' }  rounded-3xl p-2 transition-colors`} onClick={() => updateChartType('dot')}>
+                    <LuChartScatter className="inline text-2xl" />
+                    <span>Scatter Plot</span>
+                  </div>
+                </div>
+
+                
               </div>
               <p>
                 {selectedChartType == "pie" ? "Pie Chart Column:" : "Y-axis:"}
@@ -223,6 +247,8 @@ function App() {
                 </select>
               </p>
 
+              <div className={`flex gap-x-4 ${selectedChartType == 'pie' ? 'hidden' : 'block'} my-2`}>
+              <label htmlFor="color"> {hasArea ? "Area" : ''} Color: </label>
               <input type="color" name="color" id="color" onChange={(e) => {
                 reColor(e.target.value)
               }} />
@@ -231,9 +257,10 @@ function App() {
                 Generate Graph
               </button>
             </div>
+            </div>
           </div>
           <div
-            className={`grid col-span-3 justify-${selectedChartType == "pie" ? "center" : "end"}`}
+            className={`grid md:col-span-3 justify-${selectedChartType == "pie" ? "center" : "end"}`}
           >
             <>
               {fileState &&
